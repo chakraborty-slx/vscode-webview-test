@@ -1,0 +1,4 @@
+{
+    "name": "example-extension",
+    "image": "ubuntu:18.04"
+}
