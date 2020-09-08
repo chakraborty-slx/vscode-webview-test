@@ -33,12 +33,6 @@ export async function activate(context: vscode.ExtensionContext) {
 
         const fullWebServerUri = await (<any>vscode.env).asExternalUri(vscode.Uri.parse(serverUri)) as vscode.Uri;
 
-        // Work around different issue where https not returned for browser-based editor
-        const fullWebServerString =
-            (['localhost', '127.0.0.1', '0.0.0.0'].indexOf(fullWebServerUri.authority.split(':')[0]) < 0) ?
-                fullWebServerUri.toString().replace('http:', 'https:') :
-                fullWebServerUri.toString();
-
         // Create the webview
         const panel = vscode.window.createWebviewPanel(
             'asExternalUriWebview',
@@ -51,12 +45,12 @@ export async function activate(context: vscode.ExtensionContext) {
                 <head>
                     <meta
                         http-equiv="Content-Security-Policy"
-                        content="default-src 'none'; frame-src ${fullWebServerString} https:; img-src ${cspSource} https:; script-src ${cspSource}; style-src ${cspSource} 'unsafe-inline'"
+                        content="default-src 'none'; frame-src ${fullWebServerUri} https:; img-src ${cspSource} https:; script-src ${cspSource}; style-src ${cspSource} 'unsafe-inline'"
                     />
                 </head>
                 <body>
                 <!-- All content from the web server must be in an iframe -->
-                <iframe src="${fullWebServerString}" width="600" height="600" style="background-color: white;">
+                <iframe src="${fullWebServerUri}" width="600" height="600" style="background-color: white;">
             </body>
             </html>`;
     });
